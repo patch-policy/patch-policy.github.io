@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Patch Policy</title>
+    <link rel="stylesheet" href="static/css/bulma.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="static/css/fonts.css" rel="stylesheet">
+    <style>
+        :root {
+            --nyu-purple: #57068C;
+            --nyu-purple-dark: #3D0063;
+            --nyu-purple-light: #7A29A8;
+            --accent-blue: rgb(77, 154, 198);
+            --bg-cream: rgb(245, 243, 238);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto Slab', serif;
+            background-color: var(--bg-cream);
+        }
+
+        /* Default media styling */
+        video,
+        img:not(.navbar-item img) {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Override Bulma white backgrounds with cream */
+        .navbar,
+        .navbar-menu,
+        .navbar-dropdown,
+        .hero,
+        .hero-body,
+        .section,
+        .box,
+        .card,
+        .footer {
+            background-color: var(--bg-cream);
+        }
+
+        .navbar-item:hover,
+        .navbar-link:hover,
+        a.navbar-item:hover {
+            background-color: rgba(87, 6, 140, 0.05);
+        }
+
+        .navbar-item.link.is-info {
+            color: inherit;
+        }
+
+        .navbar-item.link.is-info:hover {
+            color: var(--nyu-purple);
+        }
+
+        .hero-text {
+            font-size: 5rem;
+            color: var(--nyu-purple-dark);
+        }
+
+        .hero-subtitle {
+            font-size: 2rem;
+            color: var(--nyu-purple-dark);
+        }
+
+        .hero-subtext {
+            font-size: 1.5rem;
+        }
+
+        @media screen and (max-width: 767px) {
+            .hero-text {
+                font-size: 15vw;
+            }
+
+            .hero-subtitle {
+                font-size: 6vw;
+            }
+
+            .hero-subtext {
+                font-size: 4vw;
+            }
+        }
+
+        .nav-link {
+            font-size: 1.25rem;
+        }
+
+        #nav {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+        }
+
+        video.is-square-video {
+            aspect-ratio: 1 / 1;
+        }
+
+        .media-caption {
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .divider {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(87, 6, 140, 0.2), rgba(0, 0, 0, 0));
+            margin: 3rem 0;
+        }
+
+        :target {
+            scroll-margin-top: 100px;
+        }
+
+        /* ---- Carousel (video slider) ---- */
+        .carousel-wrapper {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-track {
+            display: flex;
+            align-items: center;
+            transition: transform 0.4s ease-in-out;
+            will-change: transform;
+        }
+
+        .carousel-window {
+            flex: 0 0 80%;
+            margin: 0 10px;
+            opacity: 0.45;
+            transform: scale(0.92);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        .carousel-window.active {
+            opacity: 1;
+            transform: scale(1);
+            z-index: 2;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .carousel-window video {
+            width: 100%;
+            display: block;
+            border-radius: 8px;
+            box-shadow: none;
+        }
+
+        @media screen and (max-width: 768px) {
+            .carousel-window {
+                flex: 0 0 90%;
+            }
+        }
+
+        .carousel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        .carousel-btn {
+            pointer-events: auto;
+            background-color: rgba(0, 0, 0, 0.35);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .carousel-btn:hover {
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .carousel-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 48;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .carousel-dots {
+            text-align: center;
+            margin-top: 0.75rem;
+        }
+
+        .carousel-dots span {
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 5px;
+            cursor: pointer;
+            background-color: #bbb;
+        }
+
+        .carousel-dots span.active {
+            background-color: var(--nyu-purple);
+        }
+
+        /* Vertical Navbar */
+        #vertical-nav {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            background-color: rgba(87, 6, 140, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-dot:hover,
+        .nav-dot.active {
+            background-color: var(--nyu-purple);
+            transform: scale(1.2);
+        }
+
+        .nav-label {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--nyu-purple);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, left 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-dot:hover .nav-label,
+        .nav-dot.active .nav-label {
+            opacity: 1;
+            left: 25px;
+        }
+
+        @media screen and (max-width: 1024px) {
+            #vertical-nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav id="vertical-nav">
+        <a href="#intro" class="nav-dot active" data-target="intro"><span class="nav-label">Intro</span></a>
+        <a href="#method" class="nav-dot" data-target="method"><span class="nav-label">Method</span></a>
+        <a href="#real-robot" class="nav-dot" data-target="real-robot"><span class="nav-label">Real Robot</span></a>
+        <a href="#sim-environments" class="nav-dot" data-target="sim-environments"><span class="nav-label">Sim Environments</span></a>
+    </nav>
+
+    <nav class="navbar" role="navigation" aria-label="main navigation" id="nav">
+        <div class="navbar-brand">
+            <a class="navbar-item nav-link is-size-3" href="#intro">
+                <span>Patch Policy</span>
+            </a>
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div id="navMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item link is-info nav-link" href="#method"><span>Method</span></a>
+                <a class="navbar-item link is-info nav-link" href="#real-robot"><span>Real Robot</span></a>
+                <a class="navbar-item link is-info nav-link" href="#sim-environments"><span>Sim Environments</span></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===================== HERO / TITLE / ABSTRACT ===================== -->
+    <div class="hero" id="intro">
+        <div class="hero-body block">
+            <div class="container">
+                <div class="container block">
+                    <div class="title block has-text-centered">
+                        <h1 class="hero-text">Patch Policy</h1>
+                    </div>
+                </div>
+
+                <!-- Summary / project overview video -->
+                <div class="container block">
+                    <div class="columns is-centered">
+                        <div class="column is-10">
+                            <figure class="image">
+                                <video src="static/videos/summary.mp4" controls="" muted="" autoplay="" playsinline=""
+                                    loop=""></video>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container block columns">
+                    <div class="column">
+                        <div class="is-size-5 block" id="abstract">
+                            <h2 class="title is-4" style="color: var(--nyu-purple-dark);">Abstract</h2>
+                            <p>
+                                Pretrained dense visual features from Vision Transformers (ViTs) are powerful yet have
+                                been underutilized in robot learning. Modern robot policies either compress each
+                                observation into a single global token, or rely on visual backbones trained from
+                                scratch, sacrificing both fine-grained spatial detail and the benefits of large-scale
+                                visual pre-training. While there exist policies that do operate on dense patch features
+                                like large vision-language-action models (VLAs), they tend to be heavy and slow,
+                                inheriting the full cost of a billion-parameter vision-language model (VLM) backbone. We
+                                close this gap with <strong>Patch Policy</strong>, a minimal architectural extension that
+                                enables transformer-based policies to consume dense pre-trained patch tokens directly
+                                without the computational overhead of a full VLM. At its core is a block-causal attention
+                                mask that preserves the temporal causality of standard policies while letting the model
+                                attend over many patch tokens per observation, alongside other state information.
+                            </p>
+                            <br>
+                            <p>
+                                <strong>Patch Policy</strong> is lightweight, fast, and highly effective. Across four
+                                simulated and three real-world environment suites, our method achieves a 40% relative
+                                improvement over policies using state-of-the-art global-pooled representations.
+                                Furthermore, it surpasses fine-tuned OpenVLA-OFT by 21% while using roughly 0.7% of the
+                                parameters. We believe <strong>Patch Policy</strong> provides a pipeline for the robotics
+                                community to readily leverage continuing progress in visual representation learning,
+                                without sacrificing the training efficiency or inference speed required for
+                                high-frequency, reactive control.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ===================== METHOD ===================== -->
+    <div class="section" id="method">
+        <div class="container">
+            <div class="subtitle block">
+                <h2 class="hero-subtitle" style="margin-bottom: 20px;">Method</h2>
+            </div>
+            <div class="content is-size-5 block">
+                <p>
+                    In this work, we aim to give visuomotor policies direct access to the dense, spatially-rich features
+                    that large-scale Vision Transformer pre-training already provides. Instead of compressing each
+                    observation into a single global vector such as a pooled feature or a ViT CLS token, which discards
+                    the fine-grained detail needed for precise manipulation, Patch Policy feeds the full grid of patch
+                    features from a frozen, pretrained ViT to a lightweight transformer-based policy. A block-causal
+                    attention mask lets the model integrate spatial information within each frame while preserving
+                    temporal causality across frames.
+                </p>
+            </div>
+            <figure class="image block" style="max-width: 1100px; margin: 0 auto;">
+                <img src="static/img/method.png" alt="Patch Policy method overview"
+                    style="background-color: #fff; padding: 1.5rem; border-radius: 12px;">
+            </figure>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ===================== REAL ROBOT ===================== -->
+    <div class="section" id="real-robot">
+        <div class="container">
+            <div class="subtitle block">
+                <h2 class="hero-subtitle" style="margin-bottom: 20px;">Real Robot Environments</h2>
+            </div>
+            <div class="content is-size-5 block">
+                <p>
+                    We evaluate Patch Policy on three real-world manipulation tasks: cable insertion, pen collection,
+                    and tool hanging. The rollouts below show side-by-side executions for each task; the sections that
+                    follow break down success and failure cases against the baselines.
+                </p>
+            </div>
+
+            <!-- Real-robot rollouts slider (side-by-side) -->
+            <div class="block">
+                <div class="columns is-centered">
+                    <div class="column is-10">
+                        <figure class="image" style="position: relative;">
+                            <div class="carousel-wrapper" id="carousel-wrapper-rollouts">
+                                <div class="carousel-track" id="carousel-track-rollouts">
+                                    <div class="carousel-window active" data-index="0" data-title="Cable Insertion">
+                                        <div style="padding: 0.75rem;">
+                                            <figure class="image m-0">
+                                                <video src="static/videos/real/rollouts/cable.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                            </figure>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-window" data-index="1" data-title="Pen Collection">
+                                        <div style="padding: 0.75rem;">
+                                            <figure class="image m-0">
+                                                <video src="static/videos/real/rollouts/pen.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                            </figure>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-window" data-index="2" data-title="Tool Hanging">
+                                        <div style="padding: 0.75rem;">
+                                            <figure class="image m-0">
+                                                <video src="static/videos/real/rollouts/tool.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-overlay">
+                                <button class="carousel-btn" id="prev-btn-rollouts" style="margin-left: 10px;"><svg viewBox="0 0 512 512"><path d="M328 112L184 256l144 144"/></svg></button>
+                                <button class="carousel-btn" id="next-btn-rollouts" style="margin-right: 10px;"><svg viewBox="0 0 512 512"><path d="M184 112l144 144-144 144"/></svg></button>
+                            </div>
+                        </figure>
+                        <div class="carousel-dots" id="dots-rollouts"></div>
+                        <p class="hero-subtext has-text-centered mt-3" id="title-rollouts"></p>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Continuous Plug/Unplug Demo -->
+            <div class="block">
+                <h3 class="title is-4" style="color: var(--nyu-purple-dark);">Continuous Plug/Unplug Demo (2x)</h3>
+                <div class="columns is-centered">
+                    <div class="column is-10">
+                        <figure class="image">
+                            <video src="static/videos/real/demo/new_demo_sidebyside_loop_2x.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Slider-based real robot task sections -->
+            <div id="real-task-sliders">
+            <!-- ===== Cable Insertion ===== -->
+            <div class="block">
+                <h3 class="title is-4" style="color: var(--nyu-purple-dark);">Cable Insertion (10x)</h3>
+                <div class="columns is-centered">
+                    <div class="column is-10">
+                        <figure class="image" style="position: relative;">
+                            <div class="carousel-wrapper" id="carousel-wrapper-task-0">
+                                <div class="carousel-track" id="carousel-track-task-0">
+                        <!-- window 0: Patch Policy VQ-BeT DINOv2 (Ours) -->
+                        <div class="carousel-window active" data-index="0" data-title="Patch Policy VQ-BeT DINOv2 (Ours)">
+                            <div class="columns is-mobile is-gapless" style="margin: 0; padding: 0.75rem;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Cable Insertion / Patch Policy VQ-BeT DINOv2 (Ours) / Success -->
+                                        <video src="static/videos/real/cable/ours_success.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Success</figcaption>
+                                </div>
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Cable Insertion / Patch Policy VQ-BeT DINOv2 (Ours) / Failure -->
+                                        <video src="static/videos/real/cable/ours_failure.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Failure</figcaption>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- window 1: VQ-BeT DINOv2 CLS token only -->
+                        <div class="carousel-window" data-index="1" data-title="VQ-BeT DINOv2 CLS token only">
+                            <div class="columns is-mobile is-gapless" style="margin: 0; padding: 0.75rem;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Cable Insertion / VQ-BeT DINOv2 CLS token only / Success -->
+                                        <video src="static/videos/real/cable/cls_success.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Success</figcaption>
+                                </div>
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Cable Insertion / VQ-BeT DINOv2 CLS token only / Failure -->
+                                        <video src="static/videos/real/cable/cls_failure.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Failure</figcaption>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- window 2: ACT -->
+                        <div class="carousel-window" data-index="2" data-title="ACT">
+                            <div class="columns is-mobile is-gapless" style="margin: 0; padding: 0.75rem;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Cable Insertion / ACT / Success -->
+                                        <video src="static/videos/real/cable/act_success.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Success</figcaption>
+                                </div>
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Cable Insertion / ACT / Failure -->
+                                        <video src="static/videos/real/cable/act_failure.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Failure</figcaption>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- window 3: OpenVLA-OFT -->
+                        <div class="carousel-window" data-index="3" data-title="OpenVLA-OFT">
+                            <div class="columns is-mobile is-gapless" style="margin: 0; padding: 0.75rem;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Cable Insertion / OpenVLA-OFT / Success -->
+                                        <video src="static/videos/real/cable/vla_success.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Success</figcaption>
+                                </div>
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Cable Insertion / OpenVLA-OFT / Failure -->
+                                        <video src="static/videos/real/cable/vla_failure.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Failure</figcaption>
+                                </div>
+                            </div>
+                        </div>
+                                </div>
+                            </div>
+                            <div class="carousel-overlay">
+                                <button class="carousel-btn" id="prev-btn-task-0" style="margin-left: 10px;"><svg viewBox="0 0 512 512"><path d="M328 112L184 256l144 144"/></svg></button>
+                                <button class="carousel-btn" id="next-btn-task-0" style="margin-right: 10px;"><svg viewBox="0 0 512 512"><path d="M184 112l144 144-144 144"/></svg></button>
+                            </div>
+                        </figure>
+                        <div class="carousel-dots" id="dots-task-0"></div>
+                        <p class="hero-subtext has-text-centered mt-3" id="title-task-0"></p>
+                    </div>
+                </div>
+            </div>
+            <hr class="divider">
+            <!-- ===== Pen Collection ===== -->
+            <div class="block">
+                <h3 class="title is-4" style="color: var(--nyu-purple-dark);">Pen Collection (10x)</h3>
+                <div class="columns is-centered">
+                    <div class="column is-10">
+                        <figure class="image" style="position: relative;">
+                            <div class="carousel-wrapper" id="carousel-wrapper-task-1">
+                                <div class="carousel-track" id="carousel-track-task-1">
+                        <!-- window 0: Patch Policy VQ-BeT DINOv2 (Ours) -->
+                        <div class="carousel-window active" data-index="0" data-title="Patch Policy VQ-BeT DINOv2 (Ours)">
+                            <div class="columns is-mobile is-gapless" style="margin: 0; padding: 0.75rem;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Pen Collection / Patch Policy VQ-BeT DINOv2 (Ours) / Success -->
+                                        <video src="static/videos/real/pen/ours_success.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Success</figcaption>
+                                </div>
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Pen Collection / Patch Policy VQ-BeT DINOv2 (Ours) / Failure -->
+                                        <video src="static/videos/real/pen/ours_failure.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Failure</figcaption>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- window 1: VQ-BeT DINOv2 CLS token only -->
+                        <div class="carousel-window" data-index="1" data-title="VQ-BeT DINOv2 CLS token only">
+                            <div class="columns is-mobile is-gapless" style="margin: 0; padding: 0.75rem;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Pen Collection / VQ-BeT DINOv2 CLS token only / Success -->
+                                        <video src="static/videos/real/pen/cls_success.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Success</figcaption>
+                                </div>
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Pen Collection / VQ-BeT DINOv2 CLS token only / Failure -->
+                                        <video src="static/videos/real/pen/cls_failure.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Failure</figcaption>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- window 2: ACT -->
+                        <div class="carousel-window" data-index="2" data-title="ACT">
+                            <div class="columns is-mobile is-gapless" style="margin: 0; padding: 0.75rem;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Pen Collection / ACT / Success -->
+                                        <video src="static/videos/real/pen/act_success.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Success</figcaption>
+                                </div>
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Pen Collection / ACT / Failure -->
+                                        <video src="static/videos/real/pen/act_failure.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Failure</figcaption>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- window 3: OpenVLA-OFT -->
+                        <div class="carousel-window" data-index="3" data-title="OpenVLA-OFT">
+                            <div class="columns is-mobile is-gapless" style="margin: 0; padding: 0.75rem;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Pen Collection / OpenVLA-OFT / Success -->
+                                        <video src="static/videos/real/pen/vla_success.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Success</figcaption>
+                                </div>
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Pen Collection / OpenVLA-OFT / Failure -->
+                                        <video src="static/videos/real/pen/vla_failure.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Failure</figcaption>
+                                </div>
+                            </div>
+                        </div>
+                                </div>
+                            </div>
+                            <div class="carousel-overlay">
+                                <button class="carousel-btn" id="prev-btn-task-1" style="margin-left: 10px;"><svg viewBox="0 0 512 512"><path d="M328 112L184 256l144 144"/></svg></button>
+                                <button class="carousel-btn" id="next-btn-task-1" style="margin-right: 10px;"><svg viewBox="0 0 512 512"><path d="M184 112l144 144-144 144"/></svg></button>
+                            </div>
+                        </figure>
+                        <div class="carousel-dots" id="dots-task-1"></div>
+                        <p class="hero-subtext has-text-centered mt-3" id="title-task-1"></p>
+                    </div>
+                </div>
+            </div>
+            <hr class="divider">
+            <!-- ===== Tool Hanging ===== -->
+            <div class="block">
+                <h3 class="title is-4" style="color: var(--nyu-purple-dark);">Tool Hanging (10x)</h3>
+                <div class="columns is-centered">
+                    <div class="column is-10">
+                        <figure class="image" style="position: relative;">
+                            <div class="carousel-wrapper" id="carousel-wrapper-task-2">
+                                <div class="carousel-track" id="carousel-track-task-2">
+                        <!-- window 0: Patch Policy VQ-BeT DINOv2 (Ours) -->
+                        <div class="carousel-window active" data-index="0" data-title="Patch Policy VQ-BeT DINOv2 (Ours)">
+                            <div class="columns is-mobile is-gapless" style="margin: 0; padding: 0.75rem;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Tool Hanging / Patch Policy VQ-BeT DINOv2 (Ours) / Success -->
+                                        <video src="static/videos/real/tool/ours_success.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Success</figcaption>
+                                </div>
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Tool Hanging / Patch Policy VQ-BeT DINOv2 (Ours) / Failure -->
+                                        <video src="static/videos/real/tool/ours_failure.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Failure</figcaption>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- window 1: VQ-BeT DINOv2 CLS token only -->
+                        <div class="carousel-window" data-index="1" data-title="VQ-BeT DINOv2 CLS token only">
+                            <div class="columns is-mobile is-gapless" style="margin: 0; padding: 0.75rem;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Tool Hanging / VQ-BeT DINOv2 CLS token only / Success -->
+                                        <video src="static/videos/real/tool/cls_success.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Success</figcaption>
+                                </div>
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Tool Hanging / VQ-BeT DINOv2 CLS token only / Failure -->
+                                        <video src="static/videos/real/tool/cls_failure.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Failure</figcaption>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- window 2: ACT -->
+                        <div class="carousel-window" data-index="2" data-title="ACT">
+                            <div class="columns is-mobile is-gapless" style="margin: 0; padding: 0.75rem;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Tool Hanging / ACT / Success -->
+                                        <video src="static/videos/real/tool/act_success.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Success</figcaption>
+                                </div>
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Tool Hanging / ACT / Failure -->
+                                        <video src="static/videos/real/tool/act_failure.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Failure</figcaption>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- window 3: OpenVLA-OFT -->
+                        <div class="carousel-window" data-index="3" data-title="OpenVLA-OFT">
+                            <div class="columns is-mobile is-gapless" style="margin: 0; padding: 0.75rem;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Tool Hanging / OpenVLA-OFT / Success -->
+                                        <video src="static/videos/real/tool/vla_success.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Success</figcaption>
+                                </div>
+                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                    <figure class="image m-0">
+                                        <!-- REPLACE: Tool Hanging / OpenVLA-OFT / Failure -->
+                                        <video src="static/videos/real/tool/vla_failure.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                                    </figure>
+                                    <figcaption class="media-caption is-size-7 mt-2">Failure</figcaption>
+                                </div>
+                            </div>
+                        </div>
+                                </div>
+                            </div>
+                            <div class="carousel-overlay">
+                                <button class="carousel-btn" id="prev-btn-task-2" style="margin-left: 10px;"><svg viewBox="0 0 512 512"><path d="M328 112L184 256l144 144"/></svg></button>
+                                <button class="carousel-btn" id="next-btn-task-2" style="margin-right: 10px;"><svg viewBox="0 0 512 512"><path d="M184 112l144 144-144 144"/></svg></button>
+                            </div>
+                        </figure>
+                        <div class="carousel-dots" id="dots-task-2"></div>
+                        <p class="hero-subtext has-text-centered mt-3" id="title-task-2"></p>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ===================== SIM ENVIRONMENTS ===================== -->
+    <div class="section" id="sim-environments">
+        <div class="container">
+            <div class="subtitle block">
+                <h2 class="hero-subtitle" style="margin-bottom: 20px;">Simulated Environments</h2>
+            </div>
+            <div class="content is-size-5 block">
+                <p>
+                    The videos directly below are samples of real rollouts from each of our four simulated environment suites. The
+                    subsections that follow compare how Patch Policy and the baseline policies perform on each task.
+                </p>
+            </div>
+
+            <!-- Row of 4 representative rollouts -->
+            <div class="block">
+                <div class="columns is-centered" id="sim-overview-row">
+                <div class="column is-3 has-text-centered">
+                    <figure class="image">
+                        <!-- REPLACE: Push-T rollout -->
+                        <video controls="" src="static/videos/sim/rollouts/pusht.mp4" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                    </figure>
+                    <figcaption class="media-caption is-size-7 mt-2">Push-T</figcaption>
+                </div>
+                <div class="column is-3 has-text-centered">
+                    <figure class="image">
+                        <!-- REPLACE: Libero Goal rollout -->
+                        <video controls="" src="static/videos/sim/rollouts/libero_goal.mp4" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                    </figure>
+                    <figcaption class="media-caption is-size-7 mt-2">Libero Goal</figcaption>
+                </div>
+                <div class="column is-3 has-text-centered">
+                    <figure class="image">
+                        <!-- REPLACE: BlockPush rollout -->
+                        <video controls="" src="static/videos/sim/rollouts/blockpush.mp4" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                    </figure>
+                    <figcaption class="media-caption is-size-7 mt-2">BlockPush</figcaption>
+                </div>
+                <div class="column is-3 has-text-centered">
+                    <figure class="image">
+                        <!-- REPLACE: Cube rollout -->
+                        <video controls="" src="static/videos/sim/rollouts/cube.mp4" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                    </figure>
+                    <figcaption class="media-caption is-size-7 mt-2">Cube</figcaption>
+                </div>
+            </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Baselines comparison -->
+            <div id="sim-baselines">
+            <!-- ===== Push-T ===== -->
+            <div class="block">
+                <h4 class="title is-5" style="color: var(--nyu-purple);">Push-T</h4>
+                <div class="columns is-centered is-multiline">
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Push-T / Patch Policy VQ-BeT DINOv2 (Ours) -->
+                            <video src="static/videos/sim/pusht/ours_vqbet_dinov2patch_pusht.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Patch Policy VQ-BeT DINOv2 (Ours)</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Push-T / Patch Policy DP DINOv2 (Ours) -->
+                            <video src="static/videos/sim/pusht/ours_diffusionpolicy_dinov2patch_pusht.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Patch Policy DP DINOv2 (Ours)</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Push-T / Patch Policy VQ-BeT Web-SSL (Ours) -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Patch Policy VQ-BeT Web-SSL (Ours)</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Push-T / VQ-BeT DINOv2 CLS token only -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">VQ-BeT DINOv2 CLS token only</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Push-T / ACT -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">ACT</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Push-T / OpenVLA-OFT -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">OpenVLA-OFT</figcaption>
+                    </div>
+                </div>
+            </div>
+            <hr class="divider">
+
+            <!-- ===== Libero Goal ===== -->
+            <div class="block">
+                <h4 class="title is-5" style="color: var(--nyu-purple);">Libero Goal</h4>
+                <div class="columns is-centered is-multiline">
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Libero Goal / Patch Policy VQ-BeT DINOv2 (Ours) -->
+                            <video src="static/videos/sim/libero/ours_vqbet_dinov2patch_libero_task1.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Patch Policy VQ-BeT DINOv2 (Ours)</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Libero Goal / Patch Policy DP DINOv2 (Ours) -->
+                            <video src="static/videos/sim/libero/ours_diffusionpolicy_dinov2_libero_task1.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Patch Policy DP DINOv2 (Ours)</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Libero Goal / Patch Policy VQ-BeT Web-SSL (Ours) -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Patch Policy VQ-BeT Web-SSL (Ours)</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Libero Goal / VQ-BeT DINOv2 CLS token only -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">VQ-BeT DINOv2 CLS token only</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Libero Goal / ACT -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">ACT</figcaption>
+                    </div>
+                    <!-- OpenVLA-OFT intentionally left blank for Libero Goal -->
+                    <div class="column is-2 has-text-centered"></div>
+                </div>
+            </div>
+            <hr class="divider">
+
+            <!-- ===== BlockPush ===== -->
+            <div class="block">
+                <h4 class="title is-5" style="color: var(--nyu-purple);">BlockPush</h4>
+                <div class="columns is-centered is-multiline">
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: BlockPush / Patch Policy VQ-BeT DINOv2 (Ours) -->
+                            <video src="static/videos/sim/blockpush/ours_vqbet_dinov2patch_blockpush.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Patch Policy VQ-BeT DINOv2 (Ours)</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: BlockPush / Patch Policy DP DINOv2 (Ours) -->
+                            <video src="static/videos/sim/blockpush/ours_diffusionpolicy_dinov2patch_blockpush.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Patch Policy DP DINOv2 (Ours)</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: BlockPush / Patch Policy VQ-BeT Web-SSL (Ours) -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Patch Policy VQ-BeT Web-SSL (Ours)</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: BlockPush / VQ-BeT DINOv2 CLS token only -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">VQ-BeT DINOv2 CLS token only</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: BlockPush / ACT -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">ACT</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: BlockPush / OpenVLA-OFT -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">OpenVLA-OFT</figcaption>
+                    </div>
+                </div>
+            </div>
+            <hr class="divider">
+
+            <!-- ===== Cube ===== -->
+            <div class="block">
+                <h4 class="title is-5" style="color: var(--nyu-purple);">Cube</h4>
+                <div class="columns is-centered is-multiline">
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Cube / Patch Policy VQ-BeT DINOv2 (Ours) -->
+                            <video src="static/videos/sim/cube/ours_vqbet_dinov2patch_cube.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Patch Policy VQ-BeT DINOv2 (Ours)</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Cube / Patch Policy DP DINOv2 (Ours) -->
+                            <video src="static/videos/sim/cube/ours_diffusionpolicy_dinov2patch_cube.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Patch Policy DP DINOv2 (Ours)</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Cube / Patch Policy VQ-BeT Web-SSL (Ours) -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Patch Policy VQ-BeT Web-SSL (Ours)</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Cube / VQ-BeT DINOv2 CLS token only -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">VQ-BeT DINOv2 CLS token only</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Cube / ACT -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">ACT</figcaption>
+                    </div>
+                    <div class="column is-2 has-text-centered">
+                        <figure class="image">
+                            <!-- REPLACE: Cube / OpenVLA-OFT -->
+                            <video src="static/videos/placeholder.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">OpenVLA-OFT</figcaption>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="content has-text-centered is-size-7">
+            <p>Patch Policy</p>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================================
+        //  VIDEO SOURCES
+        //  All dummy videos are written out as explicit HTML above.
+        //  Search the markup for "REPLACE:" to find every slot and swap
+        //  its <video controls="" src="..."> for a real clip.
+        // ============================================================
+
+        // ---- Carousel / slider behavior ----
+        //  Each slider's markup is static (see #real-task-sliders). This only
+        //  wires up navigation; the active window's caption is read from its
+        //  data-title attribute, so editing the HTML is enough.
+        function initSlider(idSuffix) {
+            const wrapper = document.getElementById(`carousel-wrapper-${idSuffix}`);
+            const track = document.getElementById(`carousel-track-${idSuffix}`);
+            const prevBtn = document.getElementById(`prev-btn-${idSuffix}`);
+            const nextBtn = document.getElementById(`next-btn-${idSuffix}`);
+            const dots = document.getElementById(`dots-${idSuffix}`);
+            const titleEl = document.getElementById(`title-${idSuffix}`);
+            if (!track) return;
+            const windows = Array.from(track.querySelectorAll('.carousel-window'));
+            if (windows.length === 0) return;
+            let current = 0;
+
+            function renderDots() {
+                if (!dots) return;
+                dots.innerHTML = '';
+                windows.forEach((_, idx) => {
+                    const d = document.createElement('span');
+                    if (idx === current) d.className = 'active';
+                    d.onclick = () => go(idx);
+                    dots.appendChild(d);
+                });
+            }
+
+            function go(index) {
+                if (index < 0) index = windows.length - 1;
+                if (index >= windows.length) index = 0;
+                current = index;
+                if (titleEl) titleEl.textContent = windows[current].dataset.title || '';
+                renderDots();
+                const moveAmount = (wrapper.offsetWidth / 2) -
+                    (windows[current].offsetLeft + windows[current].offsetWidth / 2);
+                track.style.transform = `translateX(${moveAmount}px)`;
+                windows.forEach((w, idx) => w.classList.toggle('active', idx === current));
+            }
+
+            windows.forEach((w, idx) => w.addEventListener('click', () => go(idx)));
+            if (prevBtn) prevBtn.addEventListener('click', () => go(current - 1));
+            if (nextBtn) nextBtn.addEventListener('click', () => go(current + 1));
+            window.addEventListener('resize', () => go(current));
+
+            let startX = 0;
+            track.addEventListener('touchstart', e => { startX = e.changedTouches[0].screenX; }, { passive: true });
+            track.addEventListener('touchend', e => {
+                const endX = e.changedTouches[0].screenX;
+                if (endX < startX - 50) go(current + 1);
+                if (endX > startX + 50) go(current - 1);
+            }, { passive: true });
+
+            requestAnimationFrame(() => go(0));
+        }
+
+        // Real-robot sliders: rollouts overview and one per task.
+        ['rollouts', 'task-0', 'task-1', 'task-2'].forEach(initSlider);
+
+        // ---- Navbar burger toggle ----
+        document.addEventListener('DOMContentLoaded', () => {
+            const burger = document.querySelector('.navbar-burger');
+            const menu = document.getElementById('navMenu');
+            if (burger && menu) {
+                burger.addEventListener('click', () => {
+                    burger.classList.toggle('is-active');
+                    menu.classList.toggle('is-active');
+                });
+            }
+        });
+
+        // ---- Vertical nav active-dot tracking ----
+        const navDots = document.querySelectorAll('.nav-dot');
+        const sections = Array.from(navDots).map(dot => document.getElementById(dot.dataset.target));
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    navDots.forEach(dot => dot.classList.toggle('active', dot.dataset.target === id));
+                }
+            });
+        }, { root: null, rootMargin: '-20% 0px -80% 0px', threshold: 0 });
+        sections.forEach(section => { if (section) observer.observe(section); });
+    </script>
+</body>
+
+</html>
