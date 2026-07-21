@@ -124,6 +124,33 @@
             padding-right: 0.75rem;
         }
 
+        .sim-card-row {
+            margin-left: -0.75rem;
+            margin-right: -0.75rem;
+            row-gap: 1rem;
+        }
+
+        .sim-card-column {
+            padding: 0.75rem;
+        }
+
+        .sim-card-box {
+            height: 100%;
+            margin: 0.25rem 0.25rem 0.75rem;
+            padding: 1rem 1rem 1.25rem;
+            border: 1px solid rgba(87, 6, 140, 0.12);
+            border-radius: 16px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+        }
+
+        /* Spacing between the two videos in each sim card.
+           Selector is intentionally specific to beat Bulma's
+           `.columns.is-gapless > .column { padding: 0 !important }`. */
+        .columns.is-gapless.sim-video-pair > .column {
+            padding-left: 0.6rem !important;
+            padding-right: 0.6rem !important;
+        }
+
         .divider {
             border: 0;
             height: 1px;
@@ -812,18 +839,47 @@
             </div>
 
             <div class="block">
-                <div class="columns is-centered is-multiline">
-                    <div class="column is-6">
-                        <div class="box" style="height: 100%;">
+                <div class="columns is-centered" id="sim-overview-row">
+                    <div class="column is-3 has-text-centered">
+                        <figure class="image">
+                            <video controls="" src="static/videos/sim/rollouts/pusht.mp4" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Push-T</figcaption>
+                    </div>
+                    <div class="column is-3 has-text-centered">
+                        <figure class="image">
+                            <video controls="" src="static/videos/sim/rollouts/libero_goal.mp4" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Libero Goal</figcaption>
+                    </div>
+                    <div class="column is-3 has-text-centered">
+                        <figure class="image">
+                            <video controls="" src="static/videos/sim/rollouts/blockpush.mp4" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">BlockPush</figcaption>
+                    </div>
+                    <div class="column is-3 has-text-centered">
+                        <figure class="image">
+                            <video controls="" src="static/videos/sim/rollouts/cube.mp4" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
+                        </figure>
+                        <figcaption class="media-caption is-size-7 mt-2">Cube</figcaption>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block">
+                <div class="columns is-centered is-multiline sim-card-row">
+                    <div class="column is-6 sim-card-column" style="padding: 0.75rem;">
+                        <div class="box sim-card-box" style="height: 100%;">
                             <h4 class="title is-5" style="color: var(--nyu-purple);">Push-T</h4>
-                            <div class="columns is-mobile is-gapless">
+                            <div class="columns is-mobile is-gapless sim-video-pair">
                                 <div class="column is-6 has-text-centered" style="padding: 0 4px;">
                                     <figure class="image m-0">
                                         <video src="static/videos/sim/pusht/ours_vqbet_dinov2patch_pusht.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
                                     </figure>
                                     <figcaption class="media-caption is-size-7 mt-2">Patch Policy VQ-BeT DINOv2 (Ours)</figcaption>
                                 </div>
-                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 8px;">
                                     <figure class="image m-0">
                                         <video src="static/videos/sim/pusht/ours_diffusionpolicy_dinov2patch_pusht.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
                                     </figure>
@@ -832,17 +888,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="column is-6">
-                        <div class="box" style="height: 100%;">
+                    <div class="column is-6 sim-card-column" style="padding: 0.75rem;">
+                        <div class="box sim-card-box" style="height: 100%;">
                             <h4 class="title is-5" style="color: var(--nyu-purple);">Libero Goal</h4>
-                            <div class="columns is-mobile is-gapless">
-                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                            <div class="columns is-mobile is-gapless sim-video-pair">
+                                <div class="column is-6 has-text-centered" style="padding: 0 8px;">
                                     <figure class="image m-0">
                                         <video src="static/videos/sim/libero/ours_vqbet_dinov2patch_libero_task1.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
                                     </figure>
                                     <figcaption class="media-caption is-size-7 mt-2">Patch Policy VQ-BeT DINOv2 (Ours)</figcaption>
                                 </div>
-                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 8px;">
                                     <figure class="image m-0">
                                         <video src="static/videos/sim/libero/ours_diffusionpolicy_dinov2_libero_task1.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
                                     </figure>
@@ -851,17 +907,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="column is-6">
-                        <div class="box" style="height: 100%;">
+                    <div class="column is-6 sim-card-column" style="padding: 0.75rem;">
+                        <div class="box sim-card-box" style="height: 100%;">
                             <h4 class="title is-5" style="color: var(--nyu-purple);">BlockPush</h4>
-                            <div class="columns is-mobile is-gapless">
-                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                            <div class="columns is-mobile is-gapless sim-video-pair">
+                                <div class="column is-6 has-text-centered" style="padding: 0 8px;">
                                     <figure class="image m-0">
                                         <video src="static/videos/sim/blockpush/ours_vqbet_dinov2patch_blockpush.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
                                     </figure>
                                     <figcaption class="media-caption is-size-7 mt-2">Patch Policy VQ-BeT DINOv2 (Ours)</figcaption>
                                 </div>
-                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 8px;">
                                     <figure class="image m-0">
                                         <video src="static/videos/sim/blockpush/ours_diffusionpolicy_dinov2patch_blockpush.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
                                     </figure>
@@ -870,17 +926,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="column is-6">
-                        <div class="box" style="height: 100%;">
+                    <div class="column is-6 sim-card-column" style="padding: 0.75rem;">
+                        <div class="box sim-card-box" style="height: 100%;">
                             <h4 class="title is-5" style="color: var(--nyu-purple);">Cube</h4>
-                            <div class="columns is-mobile is-gapless">
-                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                            <div class="columns is-mobile is-gapless sim-video-pair">
+                                <div class="column is-6 has-text-centered" style="padding: 0 8px;">
                                     <figure class="image m-0">
                                         <video src="static/videos/sim/cube/ours_vqbet_dinov2patch_cube.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
                                     </figure>
                                     <figcaption class="media-caption is-size-7 mt-2">Patch Policy VQ-BeT DINOv2 (Ours)</figcaption>
                                 </div>
-                                <div class="column is-6 has-text-centered" style="padding: 0 4px;">
+                                <div class="column is-6 has-text-centered" style="padding: 0 8px;">
                                     <figure class="image m-0">
                                         <video src="static/videos/sim/cube/ours_diffusionpolicy_dinov2patch_cube.mp4" controls="" muted="" autoplay="" loop="" playsinline="" webkit-playsinline=""></video>
                                     </figure>
