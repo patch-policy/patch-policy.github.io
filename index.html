@@ -367,7 +367,8 @@
                     </div>
                     <div class="has-text-centered">
                         <p class="is-size-6 mt-2">
-                            <a href="https://arxiv.org/pdf/2607.18236" target="_blank" rel="noopener noreferrer" class="button is-medium" style="margin: 0.25rem; background-color: var(--nyu-purple); color: white; border: none; box-shadow: 0 2px 6px rgba(87, 6, 140, 0.2);">Paper</a>
+                            <a href="https://arxiv.org/pdf/2607.18236" target="_blank" rel="noopener noreferrer" class="button is-medium" style="margin: 0.25rem; background-color: var(--nyu-purple); color: white; border: none; box-shadow: 0 2px 6px rgba(87, 6, 140, 0.2);">PDF</a>
+                            <a href="https://arxiv.org/abs/2607.18236v1" target="_blank" rel="noopener noreferrer" class="button is-medium" style="margin: 0.25rem; background-color: var(--nyu-purple); color: white; border: none; box-shadow: 0 2px 6px rgba(87, 6, 140, 0.2);">arXiv</a>
                             <a href="https://patch-policy.github.io/" target="_blank" rel="noopener noreferrer" class="button is-medium" style="margin: 0.25rem; background-color: var(--nyu-purple); color: white; border: none; box-shadow: 0 2px 6px rgba(87, 6, 140, 0.2);">GitHub&nbsp;<span class="is-size-7">(coming soon)</span></a>
                         </p>
                         <p class="is-size-5 mt-3" style="color: var(--nyu-purple-dark);">
@@ -419,7 +420,7 @@
                                 <strong>Patch Policy</strong> is lightweight, fast, and highly effective. Across four
                                 simulated and three real-world environment suites, our method achieves a 40% relative
                                 improvement over policies using state-of-the-art global-pooled representations.
-                                Furthermore, it surpasses fine-tuned OpenVLA-OFT by 21% while using roughly 0.7% of the
+                                Furthermore, it surpasses fine-tuned OpenVLA-OFT by 18% while using roughly 0.7% of the
                                 parameters. We believe <strong>Patch Policy</strong> provides a pipeline for the robotics
                                 community to readily leverage continuing progress in visual representation learning,
                                 without sacrificing the training efficiency or inference speed required for
@@ -955,6 +956,29 @@
         </div>
     </div>
 
+    <hr class="divider">
+
+    <!-- ===================== CITATION ===================== -->
+    <div class="section" id="paper">
+        <div class="container">
+            <div class="subtitle block">
+                <h2 class="hero-subtitle" style="margin-bottom: 20px;">Citation</h2>
+            </div>
+            <div class="content">
+                <pre id="citation-text" style="max-width: 90vw; overflow-x: auto;">
+@misc{zhou2026patchpolicyefficientembodied,
+      title={Patch Policy: Efficient Embodied Control via Dense Visual Representations},
+      author={Gaoyue Zhou and Zichen Jeff Cui and Ada Langford and Bowen Tan and Yann LeCun and Lerrel Pinto},
+      year={2026},
+      eprint={2607.18236},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2607.18236},
+}</pre>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="content has-text-centered is-size-7">
             <p>Patch Policy</p>
@@ -1051,6 +1075,20 @@
             });
         }, { root: null, rootMargin: '-20% 0px -80% 0px', threshold: 0 });
         sections.forEach(section => { if (section) observer.observe(section); });
+
+        // ---- Click BibTeX to select all ----
+        const citationEl = document.getElementById('citation-text');
+        if (citationEl) {
+            citationEl.addEventListener('click', function () {
+                if (window.getSelection) {
+                    const range = document.createRange();
+                    range.selectNodeContents(this);
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            });
+        }
     </script>
 </body>
 
